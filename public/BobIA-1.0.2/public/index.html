@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BobIA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="header">
+        <img src="assets/logo widas.png" alt="">
+        <button onclick="sair()"> sair </button>
+    </div>
+
+  
+
+    <div id="container">
+        <h1>BobIA - Suporte Windas</h1>
+        <br><br>
+
+        <div class="respostas" id="respostas">
+
+        </div>
+
+        <div class="campo_pergunta">
+            <textarea id="input_pergunta" type="text" placeholder="Digite a pergunta..."></textarea>
+            <button onclick="exibirPergunta()">
+                Gerar Resposta
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+
+        function exibirPergunta() {
+            const perguntaFeita = input_pergunta.value;
+            const respostas = document.getElementById("respostas");
+
+            let containerPergunta = document.createElement('div');
+            let divPergunta = document.createElement('div');
+
+            divPergunta.innerHTML = perguntaFeita;
+
+            divPergunta.className = 'div_pergunta';
+            containerPergunta.className = 'container_pergunta';
+
+            respostas.appendChild(containerPergunta);
+            containerPergunta.appendChild(divPergunta);
+
+            gerarResposta();
+        }
+
+ 
+
+        async function gerarResposta() {
+            const pergunta = document.getElementById('input_pergunta').value;
+
+            const response = await fetch('/perguntar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ pergunta })
+            });
+
+            const data = await response.json();
+
+     
+                document.getElementById('respostas').innerHTML += `
+                    <div class="card_resposta">${data.resultado};</div>
+                `
+        }
+
+        function sair() {
+            window.location = 'http://localhost:3334';
+        }
+
+    </script>
+
+</body>
+
+</html>
